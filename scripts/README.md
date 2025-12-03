@@ -115,4 +115,4 @@ Example output:
 
 ## License
 
-This script is part of the giovanni_portfolio project and is available under the MIT License.
+This script is part of the giovanni_portfolio project. See the [LICENSE](../LICENSE) file in the repository root for details.

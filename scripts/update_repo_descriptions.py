@@ -149,21 +149,25 @@ def update_repository_description(
     }
     payload = {"description": description}
 
+    response = None
     try:
         response = requests.patch(url, headers=headers, json=payload, timeout=30)
         response.raise_for_status()
         logger.info(f"Successfully updated description for {owner}/{repo}")
         return response.json()
     except requests.exceptions.HTTPError as e:
-        if response.status_code == 404:
-            logger.error(f"Repository {owner}/{repo} not found or inaccessible.")
-        elif response.status_code == 401:
-            logger.error("Authentication failed. Check your GitHub token.")
-        elif response.status_code == 403:
-            logger.error(
-                f"Permission denied for {owner}/{repo}. "
-                "Ensure your token has 'repo' scope."
-            )
+        if response is not None:
+            if response.status_code == 404:
+                logger.error(f"Repository {owner}/{repo} not found or inaccessible.")
+            elif response.status_code == 401:
+                logger.error("Authentication failed. Check your GitHub token.")
+            elif response.status_code == 403:
+                logger.error(
+                    f"Permission denied for {owner}/{repo}. "
+                    "Ensure your token has 'repo' scope."
+                )
+            else:
+                logger.error(f"HTTP error for {owner}/{repo}: {e}")
         else:
             logger.error(f"HTTP error for {owner}/{repo}: {e}")
         return None
